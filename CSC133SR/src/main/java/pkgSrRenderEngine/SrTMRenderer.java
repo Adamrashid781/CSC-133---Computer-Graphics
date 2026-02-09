@@ -92,7 +92,7 @@ public class SrTMRenderer {
         initGLFWindow();
         initOpenGL();
 
-        fillvertexArray();
+        fillVertexArray();
 
 
         int vbo = glGenBuffers();
@@ -281,8 +281,8 @@ public class SrTMRenderer {
 //                              float cR, float cG, float cB, float cA){
 //        int baseVertex = (vArrayNextIndex / FPV);
 //    }
-    private void fillVertices(float x0, float y0, float x1, float y1, float x2, float y2,
-                              float cR, float cG, float cB, float cA){
+void fillVertices(float x0, float y0, float x1, float y1, float x2, float y2,
+                  float cR, float cG, float cB, float cA){
 
         int baseVertex = (vArrayNextIndex / FPV);  // vertex number before adding 1
 
@@ -310,13 +310,14 @@ public class SrTMRenderer {
         vertexArray[vArrayNextIndex++] = b;
         vertexArray[vArrayNextIndex++] = a;
     }
-    private void fillvertexArray(){
+    private void fillVertexArray(){
         float xmin = 400f, ymin = 1200, roh = 150f, rw = 1100f,
                 rh = 300f, bw = 800f, bh = 700f,
                 dl = roh + 250f , dw = 150f, dh = 300f; //,
                 // x1 = xmin + rw, y1 = ymin, x2 = (int)((xmin + x1)/2),
                 // y2 = ymin + rh;
 
+        SrShapeBuilder sb = new SrShapeBuilder(this);
         float x = 200f, y = 200f; // bottom left corner
         float size = 300f;
 
@@ -326,8 +327,11 @@ public class SrTMRenderer {
         float x3 = x,           y3 = y + size;      // Top left
 
 
-        fillVertices(x0, y0, x1, y1, x2, y2, 1.0f, 0.0f, 0.0f, 1.0f);
-        fillVertices(x0, y0, x2, y2, x3, y3, 1.0f, 0.0f, 0.0f, 1.0f);
+//        fillVertices(x0, y0, x1, y1, x2, y2, 1.0f, 0.0f, 0.0f, 1.0f);
+//        fillVertices(x0, y0, x2, y2, x3, y3, 1.0f, 0.0f, 0.0f, 1.0f);
+        sb.rect(1200, 400, 1000, 950, 1, 1, 0, 1);  // front wall
+        sb.rect(1450, 400, 150, 300, 1,0,1,1);      // door
+        sb.triangle(1150, 1350, 1700, 1550, 2250, 1350, 1, 0, 0, 0); // roof
 
     }
     private void renderScene(){

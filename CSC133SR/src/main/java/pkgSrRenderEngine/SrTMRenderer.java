@@ -281,7 +281,7 @@ public class SrTMRenderer {
 //                              float cR, float cG, float cB, float cA){
 //        int baseVertex = (vArrayNextIndex / FPV);
 //    }
-void fillVertices(float x0, float y0, float x1, float y1, float x2, float y2,
+protected void fillVertices(float x0, float y0, float x1, float y1, float x2, float y2,
                   float cR, float cG, float cB, float cA){
 
         int baseVertex = (vArrayNextIndex / FPV);  // vertex number before adding 1
@@ -331,7 +331,7 @@ void fillVertices(float x0, float y0, float x1, float y1, float x2, float y2,
 //        fillVertices(x0, y0, x2, y2, x3, y3, 1.0f, 0.0f, 0.0f, 1.0f);
         sb.rect(1200, 400, 1000, 950, 1, 1, 0, 1);  // front wall
         sb.rect(1450, 400, 150, 300, 1,0,1,1);      // door
-        sb.triangle(1150, 1350, 1700, 1550, 2250, 1350, 1, 0, 0, 0); // roof
+        sb.triangle(1050, 1350, 1700, 1550, 2350, 1350, 1, 0, 0, 0); // roof
 
     }
     private void renderScene(){

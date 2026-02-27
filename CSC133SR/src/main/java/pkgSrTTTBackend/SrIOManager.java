@@ -3,7 +3,7 @@ package pkgSrTTTBackend;
 import java.util.Scanner;
 import static java.lang.System.out;
 public class SrIOManager {
-    Scanner myScanner = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in);
     void SrIOManager(){
         out.println("Welcome to your unproductive time of the day!");
     }
@@ -19,8 +19,16 @@ public class SrIOManager {
     protected void initPrompt(){
         out.println("Invalid input! Try again.");
     }
-
+    // need to work on this to validate the user input
     protected int[] readIntegerInput(int[] tmp){
+        boolean isValid = false;
+        // prompt the user to select a spot
+        roColPrompt();
+        // tmp is the number of ints we are looking for, for a valid answer
+        String input = sc.nextLine().trim();
+
+
+
 
         return tmp;
     }

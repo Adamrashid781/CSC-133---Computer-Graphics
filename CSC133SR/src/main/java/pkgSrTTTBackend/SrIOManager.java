@@ -26,7 +26,34 @@ public class SrIOManager {
         roColPrompt();
         // tmp is the number of ints we are looking for, for a valid answer
         String input = sc.nextLine().trim();
+        while(!isValid) {
+            // Check pattern 1: Two integers with at least one space between
+            if (input.matches("\\d+\\s+\\d+")) {
 
+                // Split the string on one or more spaces
+                String[] parts = input.split("\\s+");
+                int row = Integer.parseInt(parts[0]);
+                int col = Integer.parseInt(parts[1]);
+                if(row >= 0 && row <= 2 && col >= 0 && col <= 2){
+                    isValid = true;
+                    // for input testing - comment out before submission
+                    out.println("For testing only: Comment out before submitting" + input);
+                    out.println("Value 1: " + row + " Value 2: " + col + " \n");
+                }
+                else initPrompt();
+            }
+
+            // Pattern 2: exactly one letter
+            else if (input.matches("[a-zA-Z]")) {
+                char letter = input.charAt(0);
+                isValid = true;
+                // Comment this line out:
+                out.println("Comment this line out: Valid letter: " + letter);
+            } else {
+                initPrompt();
+                out.println("Invalid input you imbecile ");
+            }
+        }
 
 
 
@@ -61,8 +88,15 @@ public class SrIOManager {
         out.println("Beginning another round; type \"q\" to quit!\n");
     }
 
-    protected void printBoard(SrTTTBoard tt){
-
+    // This method gets a copy of the board from SrTTTBoard and prints it
+    protected void printBoard(SrTTTBoard board){
+        char[][] temp = board.getBoard();
+        for(int r = 0; r < 3; r++){
+            for(int c = 0; c < 3; c++){
+                out.print(temp[r][c] + " ");
+            }
+            out.print("\n");
+        }
     }
 
     protected void quitGameMessage(){

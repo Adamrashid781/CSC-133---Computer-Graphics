@@ -46,7 +46,7 @@ public class SrTTTBoard {
         return copy;
     }
     // returns the value at the specific [][] index
-    protected char getContent(int col, int row){
+    protected char getContent(int row, int col){
         return tttBoard[row][col];
 
     }
@@ -61,5 +61,8 @@ public class SrTTTBoard {
             return true;
         }
         return false; // meaning cell is already taken
+    }
+
+    public boolean Get() {
     }
 }

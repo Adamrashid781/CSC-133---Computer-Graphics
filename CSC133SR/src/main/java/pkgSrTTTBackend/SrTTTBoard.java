@@ -10,9 +10,9 @@ public class SrTTTBoard {
         clearBoard();
         cornerCells = new int[][]{
                 {0,0},
-                {0, 2},
-                {2, 0},
-                {2, 2}
+                {0, SrTTTSPOT.NUM_COLS - 1},
+                {SrTTTSPOT.NUM_ROWS - 1, 0},
+                {SrTTTSPOT.NUM_ROWS - 1, SrTTTSPOT.NUM_COLS - 1}
         };
         sideCells = new int[][]{
                 {1, 0},
@@ -26,13 +26,13 @@ public class SrTTTBoard {
     protected void clearBoard(){
         for(int row = 0; row < 3; row++){
             for(int col = 0; col < 3; col++){
-                tttBoard[row][col] = '_';
+                tttBoard[row][col] = SrTTTSPOT.DEFAULT_CHAR;
             }
         }
     }
 
     // to protect the board from being accessed, i copy it to a temporary board
-    // and i return the copy
+    // and return the copy
     protected char[][] getBoard(){
         int r = SrTTTSPOT.NUM_ROWS;
         int c = SrTTTSPOT.NUM_COLS;
@@ -52,15 +52,14 @@ public class SrTTTBoard {
     }
     // Sets the value at the specified [][] index
     protected boolean setContent(int row, int col, char mp ){
-        if(tttBoard[row][col] == '_'){
+        // validate indices
+        if(row < 0 || row >= SrTTTSPOT.NUM_ROWS || col < 0 || col >= SrTTTSPOT.NUM_COLS){
+            return false;
+        }
+        if(tttBoard[row][col] == SrTTTSPOT.DEFAULT_CHAR){
             tttBoard[row][col] = mp;
             return true;
         }
-        else {
-            out.print("That spot is taken already! Try a new one");
-            return false;
-
-        }
-
+        return false; // meaning cell is already taken
     }
 }

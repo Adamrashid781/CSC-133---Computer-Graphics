@@ -30,7 +30,7 @@ public class SrIOManager {
         // tmp is the number of ints we are looking for, for a valid answer
         String input = sc.nextLine().trim();
             // Quit
-            if (!input.equalsIgnoreCase("q")) {
+            if (input.equalsIgnoreCase("q")) {
                 return new int[]{SrTTTSPOT.GAME_QUIT};
             }
 

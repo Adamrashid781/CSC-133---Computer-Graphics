@@ -6,7 +6,7 @@ public class SrTTTBoard {
     int[][] sideCells ;
     private char[][] tttBoard = new char[SrTTTSPOT.NUM_ROWS][SrTTTSPOT.NUM_COLS];
 
-    void SrTTTBoard(){
+    public SrTTTBoard(){
         clearBoard();
         cornerCells = new int[][]{
                 {0,0},
@@ -63,6 +63,14 @@ public class SrTTTBoard {
         return false; // meaning cell is already taken
     }
 
-    public boolean Get() {
+    // Add these to SrTTTBoard.java
+    public void setTestContent(int row, int col, char mp) {
+        this.tttBoard[row][col] = mp;
+        // System.out.println("Placed spot at: " + row + col);
+    }
+
+    public void clearTestContent(int row, int col) {
+        this.tttBoard[row][col] = SrTTTSPOT.DEFAULT_CHAR;
+        // System.out.println("Cleared spot at: " + row + col);
     }
 }

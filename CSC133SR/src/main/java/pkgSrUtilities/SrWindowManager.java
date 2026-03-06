@@ -13,55 +13,112 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class SrWindowManager {
     // Class member variables
-    private static GLFWKeyCallback keyCallback;
     private static SrWindowManager myWindow;
-    private static GLFWFramebufferSizeCallback resizeWindow;
-    private static long glfwWindow;
+    private static GLFWKeyCallback keyCallback;
+
+    private static long glfwWindow = NULL;
     private static GLFWFramebufferSizeCallback fbCallBack;
     private static int  winWidth = 1800;
     private static int winHeight = 1200;
+    private final int offSet = ;
+
+    private static GLFWFramebufferSizeCallback resizeWindow = new GLFWFramebufferSizeCallback() {
+        @Override
+        public void invoke(long window, int width, int height) {
+            if(width > 0 && height > 0){
+                winWidth = width;
+                winHeight = height;
+                glViewport(0, 0, width, height);
+            }
+        }
+    };
 
 
-    public SrWindowManager(){
-        get();
-        get(int w, int h);
-    }
+    public SrWindowManager(){}
+
     private static SrWindowManager get(){
-
+        if(myWindow == null){
+            myWindow = new SrWindowManager();
+            initGlfwWindow();
+        }
+        return myWindow;
+    }//  private static XyWindowManager get()
+    public static SrWindowManager get(int w, int h){
+        winWidth = w;
+        winHeight = h;
+        return get();
     }
-    private static SrWindowManager get(int w, int h){
+    private static void initGlfwWindow(){
+        GLFWErrorCallback.createPrint(System.err).set();
 
+        if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
+
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_SAMPLES, 8);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+
+        glfwWindow = glfwCreateWindow(winWidth, winHeight, "CSC138", NULL, NULL);
+        if(glfwWindow == NULL){
+            throw new RuntimeException("Failed to create the GLFW window");
+        }
+
+        // Set initial position
+        glfwSetWindowPos(glfwWindow, 30, 30);
+
+        myWindow.updateContextToThis();
+
+        // Initialize OpenGL capabilities for this context
+        GL.createCapabilities();
+
+        glfwSwapInterval(1); //VSync
+        glfwShowWindow(glfwWindow);
+
+        // Enabling callbacks
     }
-
     private static void enableSetKeyCallback(){
-
+        glfwSetKeyCallback(glfwWindow, keyCallback = new GLFWKeyCallback() {
+            @Override
+            public void invoke(long window, int key, int scancode, int action, int mods) {
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+                    glfwSetWindowShouldClose(window, true);
+            }
+        });
     }
 
     public int[] getWindowSize(){
-        return int[-1][-1];
+        return new int[]{winWidth, winHeight};
     }
 
     public void destroyGlfwWindow(){
-
+        if(glfwWindow != NULL){
+            glfwDestroyWindow(glfwWindow);
+            keyCallback.free();
+            resizeWindow.free();
+        }
+        glfwTerminate();
     }
-    private static void initGlfwWindow(){
 
-    }
     public void updateContextToThis(){
-
+        glfwMakeContextCurrent(glfwWindow);
     }
-    public static void setWinWidth(int width, int height){
-
+    public static void setWinSize(int width, int height){
+        winWidth = width ;
+        winHeight = height;
     }
     public void swapBuffers(){
-
+        glfwSwapBuffers(glfwWindow);
     }
     public static void enableResizeWindowCallback(){
-
+        glfwSetFramebufferSizeCallback(glfwWindow, resizeWindow);
     }
-    public static boolean isGlfwWindowClosed(){
 
-        return false;
+    public static boolean isGlfwWindowClosed(){
+        return glfwWindowShouldClose(glfwWindow);
     }
 
 

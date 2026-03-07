@@ -1,15 +1,14 @@
 package pkgSrUtilities;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class SrWindowManager {
     // Class member variables
@@ -17,10 +16,11 @@ public class SrWindowManager {
     private static GLFWKeyCallback keyCallback;
 
     private static long glfwWindow = NULL;
-    private static GLFWFramebufferSizeCallback fbCallBack;
-    private static int  winWidth = 1800;
-    private static int winHeight = 1200;
-    private final int offSet = ;
+    private static int  winWidth ;
+    private static int winHeight ;
+    private static boolean resized = false;
+
+
 
     private static GLFWFramebufferSizeCallback resizeWindow = new GLFWFramebufferSizeCallback() {
         @Override
@@ -29,12 +29,11 @@ public class SrWindowManager {
                 winWidth = width;
                 winHeight = height;
                 glViewport(0, 0, width, height);
+                resized = true;
             }
         }
     };
 
-
-    public SrWindowManager(){}
 
     private static SrWindowManager get(){
         if(myWindow == null){
@@ -48,6 +47,29 @@ public class SrWindowManager {
         winHeight = h;
         return get();
     }
+
+    // Getter for the resized boolean
+    public static boolean wasResized(){
+        boolean r = resized;
+        resized = false;
+        return r;
+    }
+
+    public static int getWinWidth(){
+        return winWidth;
+    }
+    public static int getWinHeight(){
+        return winHeight;
+    }
+
+    // Offset between the shape and edge of window
+    public static int getOffset(){
+        return (int)(winWidth * 0.08f);
+    }
+    public static int getPadding(){
+        return (int)(winWidth * 0.05f);
+    }
+
     private static void initGlfwWindow(){
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -79,6 +101,8 @@ public class SrWindowManager {
         glfwShowWindow(glfwWindow);
 
         // Enabling callbacks
+        enableSetKeyCallback();
+        enableResizeWindowCallback();
     }
     private static void enableSetKeyCallback(){
         glfwSetKeyCallback(glfwWindow, keyCallback = new GLFWKeyCallback() {
@@ -90,9 +114,7 @@ public class SrWindowManager {
         });
     }
 
-    public int[] getWindowSize(){
-        return new int[]{winWidth, winHeight};
-    }
+
 
     public void destroyGlfwWindow(){
         if(glfwWindow != NULL){
@@ -106,10 +128,6 @@ public class SrWindowManager {
     public void updateContextToThis(){
         glfwMakeContextCurrent(glfwWindow);
     }
-    public static void setWinSize(int width, int height){
-        winWidth = width ;
-        winHeight = height;
-    }
     public void swapBuffers(){
         glfwSwapBuffers(glfwWindow);
     }
@@ -117,8 +135,8 @@ public class SrWindowManager {
         glfwSetFramebufferSizeCallback(glfwWindow, resizeWindow);
     }
 
-    public static boolean isGlfwWindowClosed(){
-        return glfwWindowShouldClose(glfwWindow);
+    public boolean isGlfwWindowClosed(){
+        return glfwWindow != 0 && glfwWindowShouldClose(glfwWindow);
     }
 
 

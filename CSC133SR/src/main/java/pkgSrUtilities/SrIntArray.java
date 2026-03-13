@@ -2,6 +2,8 @@ package pkgSrUtilities;
 import java.io.*;
 import java.util.*;
 
+import static java.lang.System.out;
+
 public class SrIntArray {
     SrRCPair[] myRCPArray = new SrRCPair[8];
     // 1. sets the size of int[][] arrayData
@@ -84,7 +86,14 @@ public class SrIntArray {
     }
 
     public void printArray(String someString){
-
+        String array = "";
+        out.println(someString);
+        for(int row = 0; row < arrayData.length; row++){
+            for(int col = 0; col < arrayData[0].length; col++){
+                 out.printf("%3d", arrayData[row][col]);
+            }
+            out.println();
+        }
     }
 
     public void randomizeViaFisherYatesKnuth(){
@@ -92,7 +101,8 @@ public class SrIntArray {
     }
 
     public int[][] getClone(){
-        int[][] x = {{1, 2, 3},
+        int[][] x = {
+                {1, 2, 3},
                 {2, 3, 4}
                 };
         return x;
@@ -135,4 +145,4 @@ public class SrIntArray {
     }
 
 
-}
+} // end SrIntArray()

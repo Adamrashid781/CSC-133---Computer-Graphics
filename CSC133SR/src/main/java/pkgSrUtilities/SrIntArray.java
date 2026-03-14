@@ -81,8 +81,10 @@ public class SrIntArray {
     }  //  public void loadFile(...)
 
     public int[] getNumRowsCols(){
-        int[] x = {3, 2, 1};
-        return x ;
+        int[] rc = new int[2];
+        rc[0] = arrayData.length;
+        rc[1] = arrayData[0].length;
+        return rc ;
     }
 
     public void printArray(String someString){
@@ -101,11 +103,11 @@ public class SrIntArray {
     }
 
     public int[][] getClone(){
-        int[][] x = {
-                {1, 2, 3},
-                {2, 3, 4}
-                };
-        return x;
+        int[][] copy = new int[arrayData.length][arrayData[0].length];
+            for(int r = 0; r < arrayData.length; r++){
+                System.arraycopy(arrayData[r], 0, copy[r], 0, arrayData[0].length);
+            }
+        return copy;
     }
 
     public boolean saveToFiles(String someString, int x){

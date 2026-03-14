@@ -88,7 +88,6 @@ public class SrIntArray {
     }
 
     public void printArray(String someString){
-        String array = "";
         out.println(someString);
         for(int row = 0; row < arrayData.length; row++){
             for(int col = 0; col < arrayData[0].length; col++){
@@ -99,7 +98,19 @@ public class SrIntArray {
     }
 
     public void randomizeViaFisherYatesKnuth(){
+        int rows = arrayData.length,
+                cols = arrayData[0].length;
+        Random myRand = new Random();
 
+        // randomly picking an index to switch with another
+        for(int myI = 0; myI < rows*cols; myI++){
+            int myVal = arrayData[myI/cols][myI%cols];
+            if(myI+1 == rows*cols) continue;
+
+            int curRand = myRand.nextInt(myI +1, rows*cols);
+            arrayData[myI/cols][myI%cols] = arrayData[curRand/cols][curRand%cols];
+            arrayData[curRand/cols][curRand%cols] = myVal;
+        }
     }
 
     public int[][] getClone(){
@@ -110,9 +121,29 @@ public class SrIntArray {
         return copy;
     }
 
-    public boolean saveToFiles(String someString, int x){
+    public boolean saveToFile(String someString, int defaultVal){
+        ///  come back to this method and see how to properly implement it
+        try(FileWriter fw = new FileWriter(someString, true)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
 
-        return false;
+            pw.println(defaultVal);
+            pw.println(arrayData.length + " "  + arrayData[0].length);
+
+            for(int row = 0; row < arrayData.length; row++){
+                pw.print(row + " 0"); // row index, starts at col 0
+                for(int col = 0; col < arrayData[0].length; col++){
+                    pw.print(" " + arrayData[row][col]);
+                }
+                pw.println();
+            }
+            // need to flush pw to actually write to the file
+            pw.flush();
+            return true;
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public SrRCPair[] getNextNearestNeighborsArray(int row, int col){
@@ -123,7 +154,8 @@ public class SrIntArray {
         ///  4%4 = 0
 
         // creating Record of pairs for surrounding neighbors
-        SrRCPair[] myRCPArray = new SrRCPair[8];
+        // instantiated at top of class
+        myRCPArray = new SrRCPair[8];
 
         // neighbor addresses
         // (-1,+1), (-1,0), (-1,-1), (0,-1), (+1,-1), (+1,0), (+1,+1), (0,+1)

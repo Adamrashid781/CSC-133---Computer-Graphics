@@ -1,4 +1,4 @@
-package pkgSrUtilities;
+package pkgSrUtils;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;

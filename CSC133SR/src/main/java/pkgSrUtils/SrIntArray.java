@@ -1,4 +1,4 @@
-package pkgSrUtilities;
+package pkgSrUtils;
 import java.io.*;
 import java.util.*;
 
@@ -21,6 +21,12 @@ public class SrIntArray {
         for(int i = 0; i < data.length; i++){
             arrayData[i] = Arrays.copyOf(data[i], data[i].length);
         }
+    }
+
+    // 4. default constructor for the PingPongArray class
+    // - doesn't inherit anything
+    public SrIntArray(){
+        arrayData = new int[1][0];
     }
 
     protected int[][] arrayData;

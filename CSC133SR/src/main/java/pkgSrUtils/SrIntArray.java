@@ -183,6 +183,8 @@ public class SrIntArray {
 
         return myRCPArray;
     }
-
+    protected int getCell(int row, int col){
+        return arrayData[row][col];
+    }
 
 } // end SrIntArray()

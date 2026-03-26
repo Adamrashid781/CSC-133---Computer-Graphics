@@ -12,6 +12,7 @@ public class Driver {
         final int MAX_LOOP_COUNT = 47;
         for (int curLoop = 0; curLoop < MAX_LOOP_COUNT; ++curLoop) {
             golBoard.onTickUpdate();
+            // golBoard.printArray("current board");
         }  //  for(int curLoop = 0; curLoop < MAX_LOOP_COUNT; ++curLoop)
 
         golBoard.printArray("After " + MAX_LOOP_COUNT + " loops:");

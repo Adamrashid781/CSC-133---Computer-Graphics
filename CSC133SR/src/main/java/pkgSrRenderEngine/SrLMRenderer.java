@@ -1,6 +1,12 @@
 package pkgSrRenderEngine;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+import pkgSrUtils.SrSpot;
 import pkgSrUtils.SrWindowManager;
+
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -12,12 +18,13 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class SrLMRenderer {
-    SrLMRenderer(int , SrWindowManager myW){
-
+    public SrLMRenderer(int trianglesToRender, SrWindowManager wm){
+        curWM = wm;
+        myVDMgr = new SrVertexDataManager(trianglesToRender * SrSpot.CPV * SrSpot.VPST , trianglesToRender * SrSpot.IPST);
     }
 
     private int viewMatLocation;
-    private SrVertexDataManager curWM;
+    private SrWindowManager curWM;
     private SrVertexDataManager myVDMgr;
     private int projMatLocation;
 
@@ -79,5 +86,29 @@ public class SrLMRenderer {
         viewMatLocation = glGetUniformLocation(shader_program, "uViewMatrix");
     }
 
+    private void setupVertexAttributes(){
+        int stride = 9 * Float.BYTES ; // 9 floats per vertex
+        // This part from AI
+        // Position (Location 0)
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
+        glEnableVertexAttribArray(0);
+        // Texture (Location 1)
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, 3 * Float.BYTES);
+        glEnableVertexAttribArray(1);
+        // Color (Location 2)
+        glVertexAttribPointer(2, 4, GL_FLOAT, false, stride, 5 * Float.BYTES);
+        glEnableVertexAttribArray(2);
+    }
+    private void setupMatrices() {
+        Matrix4f proj = new Matrix4f().setOrtho(0, SrWindowManager.getWinWidth(), 0, SrWindowManager.getWinHeight(), 0, 100);
+        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+        glUniformMatrix4fv(projMatLocation, false, proj.get(fb));
 
+        Matrix4f view = new Matrix4f().lookAt(
+                new Vector3f(0, 0, 10.0f),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 1, 0)
+        );
+        glUniformMatrix4fv(viewMatLocation, false, view.get(fb));
+    }
 }

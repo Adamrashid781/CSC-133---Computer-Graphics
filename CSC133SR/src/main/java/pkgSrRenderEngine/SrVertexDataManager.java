@@ -51,7 +51,16 @@ public class SrVertexDataManager {
                                                 float x1, float y1, float u1, float v1,
                                                 float x2, float y2, float u2, float v2){
 
+        int baseVertex = (nextVCIndex / vertexStride);  // vertex number before adding 1
 
+        // z = 0 and texcoords will have dummy values
+        putVertex(x0, y0, 0f, u0, v0);
+        putVertex(x1, y1, 0f, u1, v1);
+        putVertex(x2, y2, 0f, u2, v2);
+
+        indexArray[nextIIndex++] = baseVertex;
+        indexArray[nextIIndex++] = baseVertex + 1;
+        indexArray[nextIIndex++] = baseVertex + 2;
 
 
 

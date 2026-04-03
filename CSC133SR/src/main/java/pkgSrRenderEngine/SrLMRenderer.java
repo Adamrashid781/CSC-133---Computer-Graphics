@@ -111,4 +111,13 @@ public class SrLMRenderer {
         );
         glUniformMatrix4fv(viewMatLocation, false, view.get(fb));
     }
+    private void setupProjectionOnly(){
+        Matrix4f proj = new Matrix4f().setOrtho(
+                0, SrWindowManager.getWinWidth(),
+                0, SrWindowManager.getWinHeight(),
+                0, 100
+        );
+        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+        glUniformMatrix4fv(projMatLocation, false, proj.get(fb));
+    }
 }

@@ -45,7 +45,10 @@ public class SrVertexDataManager {
 
     }
     protected void setDefaultColor(Vector4f myC){
-
+        defaultColors[0] = myC.x ;
+        defaultColors[1] = myC.y;
+        defaultColors[2] = myC.z;
+        defaultColors[3] = myC.w;
     }
     protected int fillTriangleVertexCoordinates(float x0, float y0, float u0, float v0,
                                                 float x1, float y1, float u1, float v1,

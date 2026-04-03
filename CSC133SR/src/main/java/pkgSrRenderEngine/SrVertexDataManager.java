@@ -39,7 +39,7 @@ public class SrVertexDataManager {
 
     }
     protected void resetIndexArray(){
-
+        indexArray = new int[indexArray.length];
     }
     protected int getVertexArrayLength(){
         return vertexArray.length;

@@ -24,19 +24,19 @@ public class SrVertexDataManager {
 
 
     protected float[] getVertexArray(){
-
+        return vertexArray;
     }
     protected int[] getIndexArray(){
-
+        return indexArray;
     }
     protected void resetNextIIndex(){
-
+        nextIIndex = 0;
     }
     protected void resetNextVCIndex(){
-
+        nextVCIndex = 0;
     }
     protected void resetNextVcount(){
-
+        nextVCount = 0;
     }
     protected void resetIndexArray(){
         indexArray = new int[indexArray.length];

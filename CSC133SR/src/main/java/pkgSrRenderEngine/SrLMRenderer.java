@@ -16,6 +16,24 @@ public class SrLMRenderer {
 
     }
 
+    private int viewMatLocation;
+    private SrVertexDataManager curWM;
+    private SrVertexDataManager myVDMgr;
+    private int projMatLocation;
+
+
+    public void render(){
+
+    }
+    private void fillVertexCoordinates(){
+
+    }
+    public void renderScene(){
+
+    }
+    public void initOpenGL(){
+
+    }
 
 
 }

@@ -70,7 +70,7 @@ public class SrVertexDataManager {
     }
 
     protected void resetVertexArray(){
-
+        vertexArray = new float[vertexArray.length];
     }
 
 }

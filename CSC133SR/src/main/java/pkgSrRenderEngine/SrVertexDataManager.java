@@ -66,7 +66,7 @@ public class SrVertexDataManager {
         indexArray[nextIIndex++] = baseVertex + 2;
 
 
-
+        return baseVertex;
     }
     // private helper — not in spec, but clean to keep
     private void putVertex(float x, float y, float z, float u, float v) {

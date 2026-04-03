@@ -42,7 +42,7 @@ public class SrVertexDataManager {
 
     }
     protected int getVertexArrayLength(){
-
+        return vertexArray.length;
     }
     protected void setDefaultColor(Vector4f myC){
         defaultColors[0] = myC.x ;

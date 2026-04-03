@@ -8,7 +8,7 @@ public class Driver {
     public static void main(String[] strArgs) {
 
         final int trianglesToRender = 20;
-        SrWindowManager curWM = SrWindowManager.get(WIN_WIDTH, WIN_HEIGHT);
+        SrWindowManager curWM = SrWindowManager.get(SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
         SrLMRenderer currentScene = new SrLMRenderer(trianglesToRender, curWM);
         currentScene.render();
 

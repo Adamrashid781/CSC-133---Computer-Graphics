@@ -8,6 +8,7 @@ public class SrVertexDataManager {
 
         vertexArray = new float[vaSize];
         indexArray = new int[iaSize];
+        defaultColors = new float[4];
 
         nextVCIndex = 0;
         nextIIndex = 0;

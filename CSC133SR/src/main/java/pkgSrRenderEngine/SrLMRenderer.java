@@ -2,12 +2,15 @@ package pkgSrRenderEngine;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import pkgSrUtils.SrSpot;
 import pkgSrUtils.SrWindowManager;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glGetError;
@@ -31,12 +34,96 @@ public class SrLMRenderer {
 
     public void render(){
 
+        // 1. initGlfwWindow() calls GL.createCapabilities() we can start OpenGL work:
+        initOpenGL();
+
+        // 2. filling the Java arrays (RAM)
+        fillVertexCoordinates();
+
+        // 3. creating and binding buffers
+        int vbo = glGenBuffers();
+        int ibo = glGenBuffers();
+
+        // uploading vertex data (positions, Colors)
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.createFloatBuffer(myVDMgr.getVertexArrayLength())
+                .put(myVDMgr.getVertexArray(), 0, myVDMgr.getVertexArrayLength()).flip(), GL_STATIC_DRAW);
+
+        // Uploading Index Data
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.createIntBuffer(myVDMgr.getIndexArray().length)
+                .put(myVDMgr.getIndexArray(), 0, myVDMgr.getIndexArray().length).flip(), GL_STATIC_DRAW);
+
+
+        // 4. Tell OpenGL how to rad the data that was just passed (Attributes)
+        setupVertexAttributes();
+
+        // 5. Set your Matrices (projection/ View)
+        setupMatrices();
+
+        // system testing
+        System.out.println("Expected Indices: " + (5 * 3)); // 5 triangles * 3 indices
+        System.out.println("Actual indexArray length: " + myVDMgr.getIndexArray().length);
+        System.out.println("Current iArrayNextIndex: " + myVDMgr.getIndexArray().length);
+
+
+        renderScene();
+
+
+         // void render()
     }
     private void fillVertexCoordinates(){
-
+        myVDMgr.resetNextIIndex();
+        myVDMgr.resetNextVCIndex();
+        myVDMgr.resetVertexArray();
+        myVDMgr.resetIndexArray();
+        myVDMgr.setDefaultColor(new Vector4f(0.2f, 0.4f, 0.6f, 0.8f));
+        final float xmin = 400f, ymin = 1300, roh = 150f, rw = 1100f, rh = 300f,
+                bw = 800f, bh = 700f,
+                dl = roh + 250f , dw = 150f, dh = 300f,
+                x1 = xmin + rw, y1 = ymin, x2 = (int)((xmin + x1)/2), y2 = ymin +
+                rh,
+                x3 = xmin + roh, y3 = ymin - bh, x4 = xmin + roh + bw, y4 = y3,
+                x5 = x4, y5 = ymin, x6 = xmin + roh, y6 = ymin,
+                x7 = xmin + dl, y7 = y3, x8 = x7 + dw, y8 = y7,
+                x9 = x8, y9 = y8 + dh, x10 = x7, y10 = y9;
+        final float u0 = 0f, v0 = 0f, u1 = 1f, v1 = 1f, u2 = 1f, v2 = 1f;
+        // Vertex Colors:
+        Vector4f cRoof = new Vector4f(1.0f, 0.0f, 0.0f, 1.0f);
+        Vector4f cWall = new Vector4f(1.0f, 1.0f, 0.0f, 1.0f);
+        Vector4f cDoor = new Vector4f(1.0f, 0.0f, 1.0f, 1.0f);
+        myVDMgr.setDefaultColor(cRoof);
+        myVDMgr.fillTriangleVertexCoordinates(xmin, ymin, u0, v0,
+                x1, y1, u1, v1,
+                x2, y2, u2, v2);
+        myVDMgr.setDefaultColor(cWall);
+        myVDMgr.fillTriangleVertexCoordinates(x3, y3, u0, v0,
+                x4, y4, u1, v1,
+                x5, y5, u2, v1);
+        myVDMgr.fillTriangleVertexCoordinates(x3, y3, u0, v0,
+                x5, y5, u1, v1,
+                x6, y6, u2, v1);
+        myVDMgr.setDefaultColor(cDoor);
+        myVDMgr.fillTriangleVertexCoordinates(x7, y7, u0, v0,
+                x8, y8, u1, v1,
+                x9, y9, u2, v1);
+        myVDMgr.fillTriangleVertexCoordinates(x7, y7, u0, v0,
+                x9, y9, u1, v1,
+                x10, y10, u2, v1);
     }
     public void renderScene(){
+        // Setting up the buffer
+        while(!curWM.isGlfwWindowClosed()){
+            glfwPollEvents();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if(SrWindowManager.wasResized()) {
+                setupProjectionOnly();
+            }
+            glDrawElements(GL_TRIANGLES, myVDMgr.getIndexArray().length, GL_UNSIGNED_INT, 0L);
 
+            curWM.swapBuffers();
+        }
+        curWM.destroyGlfwWindow();
     }
     public void initOpenGL(){
         int vao = glGenVertexArrays();
@@ -44,7 +131,7 @@ public class SrLMRenderer {
 
         glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
         // This  changes the color of the window
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0f, 0f, 1.0f, 1.0f);
         int shader_program = glCreateProgram();
         int vs = glCreateShader(GL_VERTEX_SHADER);
 

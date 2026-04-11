@@ -21,20 +21,24 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class SrLMRenderer {
-    public SrLMRenderer(int trianglesToRender, SrWindowManager wm){
+    public SrLMRenderer(SrVertexDataReader vdr, SrWindowManager wm, SrCamera cam, SrShaderObject so){
+        reader = vdr;
         curWM = wm;
-        myVDMgr = new SrVertexDataManager(trianglesToRender * SrSpot.CPV * SrSpot.VPST , trianglesToRender * SrSpot.IPST);
+        this.cam = cam;
+        shader = so;
+        myVDMgr = new SrVertexDataManager(reader);
+
     }
 
 
-    private int viewMatLocation;
     private SrWindowManager curWM;
     private SrVertexDataManager myVDMgr;
-    private int projMatLocation;
     private SrVertexDataReader reader;
+    private SrCamera cam;
+    private SrShaderObject shader;
 
 
-    public void render(){
+    public boolean render(){
 
         // 1. initGlfwWindow() calls GL.createCapabilities() we can start OpenGL work:
         initOpenGL();
@@ -63,10 +67,10 @@ public class SrLMRenderer {
         // 5. Set your Matrices (projection/ View)
         setupMatrices();
 
-        // system testing
-        System.out.println("Expected Indices: " + (5 * 3)); // 5 triangles * 3 indices
-        System.out.println("Actual indexArray length: " + myVDMgr.getIndexArray().length);
-        System.out.println("Current iArrayNextIndex: " + myVDMgr.getIndexArray().length);
+//        // system testing
+//        System.out.println("Expected Indices: " + (5 * 3)); // 5 triangles * 3 indices
+//        System.out.println("Actual indexArray length: " + myVDMgr.getIndexArray().length);
+//        System.out.println("Current iArrayNextIndex: " + myVDMgr.getIndexArray().length);
 
 
         renderScene();
@@ -118,43 +122,7 @@ public class SrLMRenderer {
         glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
         // This  changes the color of the window
         glClearColor(0f, 0f, 1.0f, 1.0f);
-        int shader_program = glCreateProgram();
-        int vs = glCreateShader(GL_VERTEX_SHADER);
 
-        if (glGetError() != GL_NO_ERROR) {
-            String infoLog = glGetShaderInfoLog(vs, 500);
-            System.err.println(infoLog);
-        }  //  if (glError != GL_NO_ERROR)
-
-        final String stringVS = "#version 410 core\n" +
-                "layout (location=0) in vec3 aPos;" +
-                "layout (location=1) in vec2 aTexCoords;" +
-                "layout (location=2) in vec4 aColor;" +
-                "uniform mat4 uProjMatrix;" +
-                "uniform mat4 uViewMatrix;" +
-                "out vec2 fTexCoords;" +
-                "out vec4 fColor;" +
-                "void main(void) {" +
-                "   fTexCoords = aTexCoords;" +
-                "   fColor = aColor;" +
-                "   gl_Position = uProjMatrix * uViewMatrix * vec4(aPos,1.0);" +
-                "}";
-        glShaderSource(vs, stringVS);
-        glCompileShader(vs);
-        glAttachShader(shader_program, vs);
-        int fs = glCreateShader(GL_FRAGMENT_SHADER);
-
-        final String stringPS = "#version 410 core\n" +
-                "in vec4 fColor;" +
-                "out vec4 outColor;" +
-                "void main(void) {" +
-                "   outColor = fColor;" +
-                "}";
-        glShaderSource(fs, stringPS);
-        glCompileShader(fs);
-        glAttachShader(shader_program, fs);
-        glLinkProgram(shader_program);
-        glUseProgram(shader_program);
         projMatLocation = glGetUniformLocation(shader_program, "uProjMatrix");
         viewMatLocation = glGetUniformLocation(shader_program, "uViewMatrix");
     }

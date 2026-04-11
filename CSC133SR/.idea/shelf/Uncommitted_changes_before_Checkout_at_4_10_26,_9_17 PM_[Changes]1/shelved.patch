@@ -1,0 +1,260 @@
+Index: src/main/java/pkgSrRenderEngine/SrLMRenderer.java
+===================================================================
+diff --git a/src/main/java/pkgSrRenderEngine/SrLMRenderer.java b/src/main/java/pkgSrRenderEngine/SrLMRenderer.java
+deleted file mode 100644
+--- a/src/main/java/pkgSrRenderEngine/SrLMRenderer.java	(revision fa0c2132697ceaff26da957e5d3cfa58349670d4)
++++ /dev/null	(revision fa0c2132697ceaff26da957e5d3cfa58349670d4)
+@@ -1,147 +0,0 @@
+-package pkgSrRenderEngine;
+-
+-import org.joml.Vector4f;
+-import org.lwjgl.BufferUtils;
+-import pkgSrUtils.*;
+-
+-import java.io.IOException;
+-import java.nio.FloatBuffer;
+-import java.nio.IntBuffer;
+-
+-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+-import static org.lwjgl.opengl.GL11.*;
+-import static org.lwjgl.opengl.GL15.*;
+-import static org.lwjgl.opengl.GL20.*;
+-import static org.lwjgl.opengl.GL30.*;
+-
+-public class SrLMRenderer {
+-
+-    private final SrWindowManager     curWM;
+-    private final SrCamera            myCamera;
+-    private final SrShaderObject      mySO;
+-    private final SrVertexDataManager myVDMgr;
+-    private final SrVertexDataReader  myReader;
+-
+-    public SrLMRenderer(SrVertexDataReader reader, SrWindowManager wm,
+-                        SrCamera cam, SrShaderObject so) {
+-        myReader = reader;
+-        curWM    = wm;
+-        myCamera = cam;
+-        mySO     = so;
+-        myVDMgr  = new SrVertexDataManager(reader);
+-    }
+-
+-    // ---------------------------------------------------------------
+-    // Public entry point — returns true when the scene closes normally
+-    // ---------------------------------------------------------------
+-
+-    public boolean render() throws IOException {
+-        initOpenGL();
+-
+-        // Static scene: fill vertex data once outside the render loop
+-        fillVertexCoordinates();
+-
+-        // Upload vertex data to GPU
+-        int vbo = glGenBuffers();
+-        int ibo = glGenBuffers();
+-
+-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+-        glBufferData(GL_ARRAY_BUFFER,
+-                (FloatBuffer) BufferUtils
+-                        .createFloatBuffer(myVDMgr.getVertexArrayLength())
+-                        .put(myVDMgr.getVertexArray(), 0, myVDMgr.getVertexArrayLength())
+-                        .flip(),
+-                GL_STATIC_DRAW);
+-
+-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+-                (IntBuffer) BufferUtils
+-                        .createIntBuffer(myVDMgr.getIndexArray().length)
+-                        .put(myVDMgr.getIndexArray(), 0, myVDMgr.getIndexArray().length)
+-                        .flip(),
+-                GL_STATIC_DRAW);
+-
+-        setupVertexAttributes();
+-        setupCameraMatrices();
+-
+-        renderScene();
+-        return true;
+-    }
+-
+-    // ---------------------------------------------------------------
+-    // Private helpers
+-    // ---------------------------------------------------------------
+-
+-    private void initOpenGL() throws IOException {
+-        int vao = glGenVertexArrays();
+-        glBindVertexArray(vao);
+-
+-        glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
+-        glClearColor(0f, 0f, 0f, 1.0f);
+-
+-        // Compiling shaders is safe here: GL.createCapabilities() was already
+-        // called inside SrWindowManager.get() before this renderer was created.
+-        mySO.compileShader();
+-        mySO.setShader();
+-    }
+-
+-    private void fillVertexCoordinates() {
+-        myVDMgr.resetNextIIndex();
+-        myVDMgr.resetNextVCIndex();
+-        myVDMgr.resetVertexArray();
+-        myVDMgr.resetIndexArray();
+-
+-        int numVerts = myReader.getNumVertices();
+-
+-        // Each triangle is three consecutive vertex rows with the same color
+-        for (int i = 0; i < numVerts; i += 3) {
+-            float[] v0 = myReader.getVertexCoordsArray(i);
+-            float[] v1 = myReader.getVertexCoordsArray(i + 1);
+-            float[] v2 = myReader.getVertexCoordsArray(i + 2);
+-
+-            // Row layout: x(0) y(1) z(2) u(3) v(4) R(5) G(6) B(7) A(8)
+-            myVDMgr.setDefaultColor(new Vector4f(v0[5], v0[6], v0[7], v0[8]));
+-
+-            myVDMgr.fillTriangleVertexCoordinates(
+-                    v0[0], v0[1], v0[3], v0[4],
+-                    v1[0], v1[1], v1[3], v1[4],
+-                    v2[0], v2[1], v2[3], v2[4]);
+-        }
+-    }
+-
+-    private void setupVertexAttributes() {
+-        int stride = 9 * Float.BYTES;  // 9 floats per vertex
+-        // Position (location 0): x y z
+-        glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
+-        glEnableVertexAttribArray(0);
+-        // Texture coords (location 1): u v
+-        glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, 3 * Float.BYTES);
+-        glEnableVertexAttribArray(1);
+-        // Color (location 2): R G B A
+-        glVertexAttribPointer(2, 4, GL_FLOAT, false, stride, 5 * Float.BYTES);
+-        glEnableVertexAttribArray(2);
+-    }
+-
+-    private void setupCameraMatrices() {
+-        mySO.loadMatrix4f("uProjMatrix", myCamera.getProjectionMatrix());
+-        mySO.loadMatrix4f("uViewMatrix", myCamera.getViewMatrix());
+-    }
+-
+-    private void renderScene() {
+-        while (!curWM.isGlfwWindowClosed()) {
+-            glfwPollEvents();
+-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+-
+-            if (SrWindowManager.wasResized()) {
+-                glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
+-                setupCameraMatrices();
+-            }
+-
+-            glDrawElements(GL_TRIANGLES,
+-                    myVDMgr.getIndexArray().length, GL_UNSIGNED_INT, 0L);
+-
+-            curWM.swapBuffers();
+-        }
+-    }
+-
+-}  //  public class SrLMRenderer
+Index: src/main/java/pkgSrRenderEngine/SrVertexDataManager.java
+===================================================================
+diff --git a/src/main/java/pkgSrRenderEngine/SrVertexDataManager.java b/src/main/java/pkgSrRenderEngine/SrVertexDataManager.java
+deleted file mode 100644
+--- a/src/main/java/pkgSrRenderEngine/SrVertexDataManager.java	(revision fa0c2132697ceaff26da957e5d3cfa58349670d4)
++++ /dev/null	(revision fa0c2132697ceaff26da957e5d3cfa58349670d4)
+@@ -1,99 +0,0 @@
+-package pkgSrRenderEngine;
+-
+-import org.joml.Vector4f;
+-
+-public class SrVertexDataManager {
+-
+-    private static final int vertexStride = 9;  // floats per vertex: x y z u v R G B A
+-
+-    private int     nextIIndex;
+-    private int     nextVCIndex;
+-    private int     nextVCount;
+-    private float[] vertexArray;
+-    private float[] defaultColors;
+-    private int[]   indexArray;
+-
+-    // Explicit sizes — used when caller knows counts up front
+-    SrVertexDataManager(int vaSize, int iaSize) {
+-        vertexArray   = new float[vaSize];
+-        indexArray    = new int[iaSize];
+-        defaultColors = new float[4];
+-        nextVCIndex   = 0;
+-        nextIIndex    = 0;
+-    }
+-
+-    // Sizes arrays from a data reader; vertex data is filled later by the renderer
+-    SrVertexDataManager(SrVertexDataReader reader) {
+-        int numVerts  = reader.getNumVertices();
+-        vertexArray   = new float[numVerts * vertexStride];
+-        indexArray    = new int[numVerts];
+-        defaultColors = new float[4];
+-        nextVCIndex   = 0;
+-        nextIIndex    = 0;
+-    }
+-
+-    // ---------------------------------------------------------------
+-    // Accessors
+-    // ---------------------------------------------------------------
+-
+-    protected float[] getVertexArray()     { return vertexArray; }
+-    protected int[]   getIndexArray()      { return indexArray; }
+-    protected int     getVertexArrayLength() { return vertexArray.length; }
+-
+-    // ---------------------------------------------------------------
+-    // Reset helpers
+-    // ---------------------------------------------------------------
+-
+-    protected void resetNextIIndex()  { nextIIndex  = 0; }
+-    protected void resetNextVCIndex() { nextVCIndex = 0; }
+-    protected void resetNextVcount()  { nextVCount  = 0; }
+-
+-    protected void resetIndexArray()  { indexArray  = new int[indexArray.length]; }
+-    protected void resetVertexArray() { vertexArray = new float[vertexArray.length]; }
+-
+-    // ---------------------------------------------------------------
+-    // Color default
+-    // ---------------------------------------------------------------
+-
+-    protected void setDefaultColor(Vector4f myC) {
+-        defaultColors[0] = myC.x;
+-        defaultColors[1] = myC.y;
+-        defaultColors[2] = myC.z;
+-        defaultColors[3] = myC.w;
+-    }
+-
+-    // ---------------------------------------------------------------
+-    // Geometry fill
+-    // ---------------------------------------------------------------
+-
+-    protected int fillTriangleVertexCoordinates(
+-            float x0, float y0, float u0, float v0,
+-            float x1, float y1, float u1, float v1,
+-            float x2, float y2, float u2, float v2) {
+-
+-        int baseVertex = nextVCIndex / vertexStride;
+-
+-        putVertex(x0, y0, 0f, u0, v0);
+-        putVertex(x1, y1, 0f, u1, v1);
+-        putVertex(x2, y2, 0f, u2, v2);
+-
+-        indexArray[nextIIndex++] = baseVertex;
+-        indexArray[nextIIndex++] = baseVertex + 1;
+-        indexArray[nextIIndex++] = baseVertex + 2;
+-
+-        return baseVertex;
+-    }
+-
+-    private void putVertex(float x, float y, float z, float u, float v) {
+-        vertexArray[nextVCIndex++] = x;
+-        vertexArray[nextVCIndex++] = y;
+-        vertexArray[nextVCIndex++] = z;
+-        vertexArray[nextVCIndex++] = u;
+-        vertexArray[nextVCIndex++] = v;
+-        vertexArray[nextVCIndex++] = defaultColors[0];
+-        vertexArray[nextVCIndex++] = defaultColors[1];
+-        vertexArray[nextVCIndex++] = defaultColors[2];
+-        vertexArray[nextVCIndex++] = defaultColors[3];
+-    }
+-
+-}  //  public class SrVertexDataManager

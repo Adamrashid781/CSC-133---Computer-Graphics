@@ -15,7 +15,10 @@ public class SrCamera {
         defaultUpVector = new Vector3f(upVector);
         curUpVector = new Vector3f(upVector);
 
-
+        initCamera();
+        setCurLookAt();
+        setCurLookFrom();
+        setOrthoProjection();
     }
 
     private Matrix4f projectionMatrix;
@@ -39,27 +42,27 @@ public class SrCamera {
     }
 
     public Vector3f getCurLookAt(){
-
+        return curLookAt;
     }
 
-    public void setCurLookAt(Vector3f){
-
+    public void setCurLookAt(Vector3f cla){
+        curLookAt = cla;
     }
 
-    public void setCurLookFrom(Vector3f){
-
+    public void setCurLookFrom(Vector3f clf){
+        curLookFrom = clf;
     }
 
     public Vector3f getCurLookFrom(){
-
+        return curLookFrom;
     }
 
     public Matrix4f getViewMatrix(){
-
+        return viewMatrix;
     }
 
     public Matrix4f getProjectionMatrix(){
-
+        return projectionMatrix;
     }
 
 

@@ -19,6 +19,21 @@ public class SrCamera {
 
 
 
+    public void setOrthoProjection(){
+
+    }
+
+    private void initCamera(){
+
+    }
+
+    public Vector3f getCurLookAt(){
+
+    }
+
+    public void setCurLookAt(Vector3f){
+
+    }
 
 
 }

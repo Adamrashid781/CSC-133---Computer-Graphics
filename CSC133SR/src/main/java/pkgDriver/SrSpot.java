@@ -1,4 +1,6 @@
-package pkgSrUtils;
+package pkgDriver;
+
+import org.joml.Vector3f;
 
 public class SrSpot {
 
@@ -6,6 +8,14 @@ public class SrSpot {
 
     public static final int OGL_MATRIX_SIZE = 16;
     public static final int OGL_VEC4_SIZE = 4;
+    public static final int WIN_WIDTH = 1800;
+    public static final int WIN_HEIGHT = 1200;
+
+
+    public static final Vector3f LOOK_UP = new Vector3f(0,1, 0);
+    public static final Vector3f LOOK_FROM = new Vector3f(0,0, 0);
+    public static final Vector3f LOOK_AT = new Vector3f(0,0, -1);
+
 
     // Coordinates Per Vertex, Vertices Per Single Triangle, Indexes Per Single Triangle, Floats Per Vertex ...
     public static final int CPV = 9, VPST = 3, IPST = 3, FPV = CPV * Float.BYTES, MIN_POLY_SIDES = 3;

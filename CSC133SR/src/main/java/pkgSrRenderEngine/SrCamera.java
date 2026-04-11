@@ -4,7 +4,14 @@ import org.joml.*;
 import org.joml.*;
 
 public class SrCamera {
-    public SrCamera(float , float , float , float , float , float , Vector3f){
+    public SrCamera(float left, float right, float bottom, float top, float near, float far, Vector3f upVector){
+        this.left = left;
+        this.right = right;
+        this.bottom = bottom;
+        this.top = top;
+        this.near = near;
+        this.far = far;
+
 
     }
 
@@ -17,6 +24,7 @@ public class SrCamera {
     private Vector3f defaultUpVector;
     private Vector3f curUpVector;
 
+    private float left, right, bottom, top, near, far ;
 
 
     public void setOrthoProjection(){
@@ -39,7 +47,7 @@ public class SrCamera {
 
     }
 
-    public Vector3f getCurLookFrom){
+    public Vector3f getCurLookFrom(){
 
     }
 

@@ -35,5 +35,21 @@ public class SrCamera {
 
     }
 
+    public void setCurLookFrom(Vector3f){
+
+    }
+
+    public Vector3f getCurLookFrom){
+
+    }
+
+    public Matrix4f getViewMatrix(){
+
+    }
+
+    public Matrix4f getProjectionMatrix(){
+
+    }
+
 
 }

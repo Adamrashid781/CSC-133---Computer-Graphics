@@ -12,6 +12,9 @@ public class SrCamera {
         this.near = near;
         this.far = far;
 
+        defaultUpVector = new Vector3f(upVector);
+        curUpVector = new Vector3f(upVector);
+
 
     }
 

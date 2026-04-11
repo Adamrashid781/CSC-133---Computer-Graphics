@@ -8,5 +8,15 @@ public class SrShader {
         path += "/assets/";
         String str2 = path+s1;
     }
+    public void compileShader(){
 
+    }
+
+    public void loadShader(){
+
+    }
+
+    public void offLoadShader(){
+
+    }
 }

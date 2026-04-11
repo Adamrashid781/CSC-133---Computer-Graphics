@@ -4,12 +4,20 @@ import java.nio.*;
 import java.util.Vector;
 
 public class SrVertexDataManager {
-    SrVertexDataManager(int vaSize, int iaSize){
+    public SrVertexDataManager(int vaSize, int iaSize){
 
         vertexArray = new float[vaSize];
         indexArray = new int[iaSize];
         defaultColors = new float[4];
 
+        nextVCIndex = 0;
+        nextIIndex = 0;
+    }
+    public SrVertexDataManager(SrVertexDataReader reader){
+        int numVerts = reader.getNumVertices();
+        vertexArray = new float[numVerts * vertexStride];
+        indexArray = new int[numVerts];
+        defaultColors = new float[4];
         nextVCIndex = 0;
         nextIIndex = 0;
     }

@@ -48,14 +48,24 @@ public class SrShaderObject {
 
         glShaderSource(vs, vsSrc);
         glCompileShader(vs);
+        if (glGetShaderi(vs, GL_COMPILE_STATUS) == GL_FALSE) {
+            System.err.println("Vertex shader error: " + glGetShaderInfoLog(vs));
+        }
+
         glAttachShader(shader_program, vs);
         int fs = glCreateShader(GL_FRAGMENT_SHADER);
 
 
         glShaderSource(fs, fsSrc);
         glCompileShader(fs);
+        if (glGetShaderi(fs, GL_COMPILE_STATUS) == GL_FALSE) {
+            System.err.println("Fragment shader error: " + glGetShaderInfoLog(fs));
+        }
         glAttachShader(shader_program, fs);
         glLinkProgram(shader_program);
+        if (glGetProgrami(shader_program, GL_LINK_STATUS) == GL_FALSE) {
+            System.err.println("Shader link error: " + glGetProgramInfoLog(shader_program));
+        }
         programId = shader_program;
 
 

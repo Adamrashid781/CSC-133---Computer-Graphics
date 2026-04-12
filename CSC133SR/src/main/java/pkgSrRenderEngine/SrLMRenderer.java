@@ -1,7 +1,5 @@
 package pkgSrRenderEngine;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import pkgDriver.SrSpot;
@@ -11,12 +9,9 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
@@ -75,9 +70,8 @@ public class SrLMRenderer {
 
         renderScene();
 
-
-         // void render()
-    }
+        return true;
+    }// void render()
     private void fillVertexCoordinates(){
         myVDMgr.resetNextIIndex();
         myVDMgr.resetNextVCIndex();
@@ -101,7 +95,7 @@ public class SrLMRenderer {
                     SrSpot.TILE_OFFSET_X + vec2[CX], SrSpot.TILE_OFFSET_Y + vec2[CY], vec2[CU], vec2[CV]);
         }  //  for(int curVert = 0; curVert < NUMVERTS; curVert += VPST)
     }
-    public void renderScene(){
+    protected void renderScene(){
         // Setting up the buffer
         while(!curWM.isGlfwWindowClosed()){
             glfwPollEvents();
@@ -113,9 +107,8 @@ public class SrLMRenderer {
 
             curWM.swapBuffers();
         }
-        curWM.destroyGlfwWindow();
     }
-    public void initOpenGL(){
+    protected void initOpenGL(){
         int vao = glGenVertexArrays();
         glBindVertexArray(vao);
 
@@ -123,8 +116,10 @@ public class SrLMRenderer {
         // This  changes the color of the window
         glClearColor(0f, 0f, 1.0f, 1.0f);
 
-        projMatLocation = glGetUniformLocation(shader_program, "uProjMatrix");
-        viewMatLocation = glGetUniformLocation(shader_program, "uViewMatrix");
+        shader.compileShader();
+        shader.setShader();
+
+
     }
 
     private void setupVertexAttributes(){
@@ -141,24 +136,10 @@ public class SrLMRenderer {
         glEnableVertexAttribArray(2);
     }
     private void setupMatrices() {
-        Matrix4f proj = new Matrix4f().setOrtho(0, SrWindowManager.getWinWidth(), 0, SrWindowManager.getWinHeight(), 0, 100);
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        glUniformMatrix4fv(projMatLocation, false, proj.get(fb));
-
-        Matrix4f view = new Matrix4f().lookAt(
-                new Vector3f(0, 0, 10.0f),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 1, 0)
-        );
-        glUniformMatrix4fv(viewMatLocation, false, view.get(fb));
+        shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
+        shader.loadMatrix4f("uViewMatrix", cam.getViewMatrix());
     }
     private void setupProjectionOnly(){
-        Matrix4f proj = new Matrix4f().setOrtho(
-                0, SrWindowManager.getWinWidth(),
-                0, SrWindowManager.getWinHeight(),
-                0, 100
-        );
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        glUniformMatrix4fv(projMatLocation, false, proj.get(fb));
+        shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
     }
 }

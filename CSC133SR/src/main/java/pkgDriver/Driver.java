@@ -3,6 +3,7 @@ package pkgDriver;
 import org.joml.Vector3f;
 import pkgSrRenderEngine.*;
 import pkgSrUtils.*;
+import static pkgDriver.SrSpot.*;
 
 
 public class Driver {

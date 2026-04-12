@@ -63,12 +63,12 @@ public class SrShaderObject {
 
     }
 
-    public void loadShader(){
+    protected void setShader(){
         glUseProgram(programId);
     }
 
-    public void offLoadShader(){
-
+    protected void offLoadShader(){
+        glUseProgram(0);
     }
     protected void loadMatrix4f( String uniformName, Matrix4f mtrx){
         FloatBuffer fb = BufferUtils.createFloatBuffer(16);

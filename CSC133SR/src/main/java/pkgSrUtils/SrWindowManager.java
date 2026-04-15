@@ -79,8 +79,8 @@ public class SrWindowManager {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_SAMPLES, 8);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
@@ -103,6 +103,19 @@ public class SrWindowManager {
         // Enabling callbacks
         enableSetKeyCallback();
         enableResizeWindowCallback();
+
+        // Get actual framebuffer size — on Retina/HiDPI displays this differs
+        // from the logical window size passed to glfwCreateWindow. Without this,
+        // initOpenGL() sets glViewport to the logical size (e.g. 1800x1200) while
+        // the real framebuffer is 2x larger (e.g. 3600x2400), causing the scene to
+        // render in only the bottom-left quarter and then "jump" to fill the window
+        // when the framebuffer-size callback fires on the first glfwPollEvents().
+        int[] fbWidth = {0}, fbHeight = {0};
+        glfwGetFramebufferSize(glfwWindow, fbWidth, fbHeight);
+        if (fbWidth[0] > 0 && fbHeight[0] > 0) {
+            winWidth = fbWidth[0];
+            winHeight = fbHeight[0];
+        }
     }
     private static void enableSetKeyCallback(){
         glfwSetKeyCallback(glfwWindow, keyCallback = new GLFWKeyCallback() {

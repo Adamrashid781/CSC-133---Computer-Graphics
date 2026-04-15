@@ -8,8 +8,8 @@ public class SrSpot {
 
     public static final int OGL_MATRIX_SIZE = 16;
     public static final int OGL_VEC4_SIZE = 4;
-    public static final int WIN_WIDTH = 1800;
-    public static final int WIN_HEIGHT = 1200;
+    public static final int WIN_WIDTH = 3600;
+    public static final int WIN_HEIGHT = 2400;
 
 
     public static final Vector3f LOOK_UP = new Vector3f(0,1, 0);

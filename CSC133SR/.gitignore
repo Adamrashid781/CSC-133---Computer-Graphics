@@ -1,7 +1,0 @@
-*.log
-.claude
-
-/build
-.gradle
-.ds_store
-

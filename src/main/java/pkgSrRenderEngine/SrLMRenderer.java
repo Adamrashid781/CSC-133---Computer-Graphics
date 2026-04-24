@@ -46,19 +46,7 @@ public class SrLMRenderer {
                     SrSpot.TILE_OFFSET_X + vec2[CX], SrSpot.TILE_OFFSET_Y + vec2[CY], vec2[CU], vec2[CV]);
         }  //  for(int curVert = 0; curVert < NUMVERTS; curVert += VPST)
     }
-    protected void renderScene(){
-        // Setting up the buffer
-        while(!curWM.isGlfwWindowClosed()){
-            glfwPollEvents();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            if(SrWindowManager.wasResized()) {
-                setupProjectionOnly();
-            }
-            glDrawElements(GL_TRIANGLES, myVDMgr.getIndexArray().length, GL_UNSIGNED_INT, 0L);
 
-            curWM.swapBuffers();
-        }
-    }
     protected void initOpenGL(){
         int vao = glGenVertexArrays();
         glBindVertexArray(vao);

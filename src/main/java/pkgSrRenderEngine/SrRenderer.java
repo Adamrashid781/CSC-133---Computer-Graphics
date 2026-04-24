@@ -5,6 +5,7 @@ import pkgSrUtils.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
@@ -66,4 +67,20 @@ public abstract class SrRenderer {
 
         return true;
     }// void render()
+
+    protected void renderScene(){
+        // Setting up the buffer
+        while(!curWM.isGlfwWindowClosed()){
+            glfwPollEvents();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if(SrWindowManager.wasResized()) {
+                setupProjectionOnly();
+            }
+            glDrawElements(GL_TRIANGLES, myVDMgr.getIndexArray().length, GL_UNSIGNED_INT, 0L);
+
+            curWM.swapBuffers();
+        }
+    }
+
+
 }

@@ -28,10 +28,10 @@ public class SrLMRenderer {
 
     private SrWindowManager curWM;
     private SrVertexDataManager myVDMgr;
-    private SrVertexDataReader reader;
     private SrCamera cam;
     private SrShaderObject shader;
 
+    private SrVertexDataReader reader;
 
     public boolean render(){
 

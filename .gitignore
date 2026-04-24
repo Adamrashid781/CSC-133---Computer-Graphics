@@ -1,0 +1,13 @@
+*.log
+.claude
+
+/build
+.gradle
+.ds_store
+gol_input.txt
+/gradle
+/bin
+*.run
+*.idea
+
+

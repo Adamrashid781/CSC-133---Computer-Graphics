@@ -17,61 +17,12 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class SrLMRenderer {
     public SrLMRenderer(SrVertexDataReader vdr, SrWindowManager wm, SrCamera cam, SrShaderObject so){
-        reader = vdr;
-        curWM = wm;
-        this.cam = cam;
-        shader = so;
-        myVDMgr = new SrVertexDataManager(reader);
-
+        super();
     }
-
-
-    private SrWindowManager curWM;
-    private SrVertexDataManager myVDMgr;
-    private SrCamera cam;
-    private SrShaderObject shader;
 
     private SrVertexDataReader reader;
 
-    public boolean render(){
 
-        // 1. initGlfwWindow() calls GL.createCapabilities() we can start OpenGL work:
-        initOpenGL();
-
-        // 2. filling the Java arrays (RAM)
-        fillVertexCoordinates();
-
-        // 3. creating and binding buffers
-        int vbo = glGenBuffers();
-        int ibo = glGenBuffers();
-
-        // uploading vertex data (positions, Colors)
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) BufferUtils.createFloatBuffer(myVDMgr.getVertexArrayLength())
-                .put(myVDMgr.getVertexArray(), 0, myVDMgr.getVertexArrayLength()).flip(), GL_STATIC_DRAW);
-
-        // Uploading Index Data
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) BufferUtils.createIntBuffer(myVDMgr.getIndexArray().length)
-                .put(myVDMgr.getIndexArray(), 0, myVDMgr.getIndexArray().length).flip(), GL_STATIC_DRAW);
-
-
-        // 4. Tell OpenGL how to rad the data that was just passed (Attributes)
-        setupVertexAttributes();
-
-        // 5. Set your Matrices (projection/ View)
-        setupMatrices();
-
-//        // system testing
-//        System.out.println("Expected Indices: " + (5 * 3)); // 5 triangles * 3 indices
-//        System.out.println("Actual indexArray length: " + myVDMgr.getIndexArray().length);
-//        System.out.println("Current iArrayNextIndex: " + myVDMgr.getIndexArray().length);
-
-
-        renderScene();
-
-        return true;
-    }// void render()
     private void fillVertexCoordinates(){
         myVDMgr.resetNextIIndex();
         myVDMgr.resetNextVCIndex();

@@ -41,8 +41,8 @@ public abstract class SrRenderer {
         fillVertexCoordinates();
 
         // 3. creating and binding buffers
-        int vbo = glGenBuffers();
-        int ibo = glGenBuffers();
+        vbo = glGenBuffers();
+        ibo = glGenBuffers();
 
         // uploading vertex data (positions, Colors)
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -100,7 +100,7 @@ public abstract class SrRenderer {
 
     }
 
-    private void setupVertexAttributes(){
+    protected void setupVertexAttributes(){
         int stride = 9 * Float.BYTES ; // 9 floats per vertex
         // This part from AI
         // Position (Location 0)
@@ -114,12 +114,12 @@ public abstract class SrRenderer {
         glEnableVertexAttribArray(2);
     }
 
-    private void setupMatrices() {
+    protected void setupMatrices() {
         shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
         shader.loadMatrix4f("uViewMatrix", cam.getViewMatrix());
     }
 
-    private void setupProjectionOnly(){
+    protected void setupProjectionOnly(){
         shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
     }
 }

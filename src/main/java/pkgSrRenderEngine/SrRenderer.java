@@ -114,5 +114,9 @@ public abstract class SrRenderer {
         glEnableVertexAttribArray(2);
     }
 
+    private void setupMatrices() {
+        shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
+        shader.loadMatrix4f("uViewMatrix", cam.getViewMatrix());
+    }
 
 }

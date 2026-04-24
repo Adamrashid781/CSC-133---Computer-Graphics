@@ -50,10 +50,7 @@ public class SrLMRenderer {
 
 
 
-    private void setupMatrices() {
-        shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
-        shader.loadMatrix4f("uViewMatrix", cam.getViewMatrix());
-    }
+
     private void setupProjectionOnly(){
         shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
     }

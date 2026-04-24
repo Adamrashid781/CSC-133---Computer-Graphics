@@ -119,4 +119,7 @@ public abstract class SrRenderer {
         shader.loadMatrix4f("uViewMatrix", cam.getViewMatrix());
     }
 
+    private void setupProjectionOnly(){
+        shader.loadMatrix4f("uProjMatrix", cam.getProjectionMatrix());
+    }
 }

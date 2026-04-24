@@ -1,0 +1,190 @@
+package pkgSrUtils;
+import java.io.*;
+import java.util.*;
+
+import static java.lang.System.out;
+
+public class SrIntArray {
+    SrRCPair[] myRCPArray = new SrRCPair[8];
+    // 1. sets the size of int[][] arrayData
+    public SrIntArray(int rows, int cols){
+        arrayData = new int[rows][cols];
+    }
+    // 2. Reads the data from the test file
+    public SrIntArray(String someS){
+        // calls on loadFile()
+        loadFile(someS);
+    }
+    // 3. gets a deep COPY of the data in the test file
+    public SrIntArray(int[][] data){
+        arrayData = new int[data.length][data[0].length];
+        for(int i = 0; i < data.length; i++){
+            arrayData[i] = Arrays.copyOf(data[i], data[i].length);
+        }
+    }
+
+    // 4. default constructor for the PingPongArray class
+    // - doesn't inherit anything
+    public SrIntArray(){
+        arrayData = new int[1][0];
+    }
+
+    protected int[][] arrayData;
+
+
+    // File data should conform to the file format expected, myArray should be pre-allocated large enough to
+    // accommodate the array. Format:
+    // <default_value>
+    // <ROWS> <COLS>
+    // <row_num> <col_offset_n> <c_n> <c_n+1> ... with missing columns filled by default value
+    public void loadFile(String dataFilePath) {
+        try (BufferedReader myReader = new BufferedReader(new FileReader(dataFilePath))) {
+            String inputLine;
+            int DEFAULT_VALUE = Integer.parseInt(myReader.readLine());
+            inputLine = myReader.readLine();
+            int[] rowCol = Arrays.stream(inputLine.split("\\s+"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+            final int NUM_ROWS = rowCol[0], NUM_COLS = rowCol[1];
+            if ((arrayData == null || NUM_ROWS > arrayData.length) || (NUM_COLS > arrayData[0].length)) {
+                try {
+                    arrayData = new int[NUM_ROWS][NUM_COLS];
+                } catch (OutOfMemoryError e) {
+                    arrayData = null;
+                }
+            }  //  ((NUM_ROWS >arrayData.length) || (NUM_COLS >arrayData[0].length))
+            // fillup with default values first: what is not overwritten will be default values:
+            for (int row = 0; row <arrayData.length; ++row) {
+                for (int col = 0; col <arrayData[0].length; ++col) {
+                    arrayData[row][col] = DEFAULT_VALUE;
+                }  //  for(int col = 0; col <arrayData[0].length; ++col)
+            }  //  for(int row = 0; row <arrayData; ++row)
+
+            if (arrayData != null) {
+                final int ROWNUM_INDEX = 0, COLOFFSET_INDEX = 1;
+                int curRow = 0, colOffset = 0, rowLength = 0;
+                while ((inputLine = myReader.readLine()) != null) {
+                    if (inputLine.isBlank() || inputLine.isEmpty()) {
+                        continue;
+                    }  //  if (inputLine.isBlank() || inputLine.isEmpty())
+                    // Process each inputLine here
+                    int[] readRow = Arrays.stream(inputLine.split("\\s+"))
+                            .mapToInt(Integer::parseInt)
+                            .toArray();
+                    curRow = readRow[ROWNUM_INDEX];
+                    colOffset = readRow[COLOFFSET_INDEX];
+                    int readColOffset = 2, curWriteCol = colOffset;  // we start reading data from this column
+                    while (curWriteCol < NUM_COLS && readColOffset < readRow.length) {
+                        arrayData[curRow][curWriteCol++] = readRow[readColOffset++];
+                    }  //  while (readColOffset < readRow.length && curWriteCol < NUM_COLS)
+                }  //  while ((inputLine = myReader.readLine()) != null)
+            }  //  if (retVal)
+        } catch (IOException e) {
+            e.printStackTrace();
+            arrayData = null;
+        }  // try ... catch.``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+
+    }  //  public void loadFile(...)
+
+    public int[] getNumRowsCols(){
+        int[] rc = new int[2];
+        rc[0] = arrayData.length;
+        rc[1] = arrayData[0].length;
+        return rc ;
+    }
+
+    public void printArray(String someString){
+        out.println(someString);
+        for(int row = 0; row < arrayData.length; row++){
+            for(int col = 0; col < arrayData[0].length; col++){
+                 out.printf("%3d", arrayData[row][col]);
+            }
+            out.println();
+        }
+    }
+
+    public void randomizeViaFisherYatesKnuth(){
+        int rows = arrayData.length,
+                cols = arrayData[0].length;
+        Random myRand = new Random();
+
+        // randomly picking an index to switch with another
+        for(int myI = 0; myI < rows*cols; myI++){
+            int myVal = arrayData[myI/cols][myI%cols];
+            if(myI+1 == rows*cols) continue;
+
+            int curRand = myRand.nextInt(myI +1, rows*cols);
+            arrayData[myI/cols][myI%cols] = arrayData[curRand/cols][curRand%cols];
+            arrayData[curRand/cols][curRand%cols] = myVal;
+        }
+    }
+
+    public int[][] getClone(){
+        int[][] copy = new int[arrayData.length][arrayData[0].length];
+            for(int r = 0; r < arrayData.length; r++){
+                System.arraycopy(arrayData[r], 0, copy[r], 0, arrayData[0].length);
+            }
+        return copy;
+    }
+
+    public boolean saveToFile(String someString, int defaultVal){
+        ///  come back to this method and see how to properly implement it
+        try(FileWriter fw = new FileWriter(someString, true)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            pw.println(defaultVal);
+            pw.println(arrayData.length + " "  + arrayData[0].length);
+
+            for(int row = 0; row < arrayData.length; row++){
+                pw.print(row + " 0"); // row index, starts at col 0
+                for(int col = 0; col < arrayData[0].length; col++){
+                    pw.print(" " + arrayData[row][col]);
+                }
+                pw.println();
+            }
+            // need to flush pw to actually write to the file
+            pw.flush();
+            return true;
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public SrRCPair[] getNextNearestNeighborsArray(int row, int col){
+
+        ///  1%4 = 1
+        ///  2%4 = 2
+        ///  3%4 = 3
+        ///  4%4 = 0
+
+        // creating Record of pairs for surrounding neighbors
+        // instantiated at top of class
+        myRCPArray = new SrRCPair[8];
+
+        // neighbor addresses
+        // (-1,+1), (-1,0), (-1,-1), (0,-1), (+1,-1), (+1,0), (+1,+1), (0,+1)
+        // row and col are (0, 0)
+        int nextR = (row + 1) % arrayData.length;
+        int nextC = (col + 1) % arrayData[0].length;
+
+        int prevR = (arrayData.length + row-1) % arrayData.length;
+        int prevC = (arrayData[0].length + col-1) % arrayData[0].length;
+
+        myRCPArray[0] = new SrRCPair(prevR, nextC); //  (-1, +1)
+        myRCPArray[1] = new SrRCPair(prevR, col); //    (-1,0)
+        myRCPArray[2] = new SrRCPair(prevR, prevC); //  (-1,-1)
+        myRCPArray[3] = new SrRCPair(row, prevC); //    (0,-1)
+        myRCPArray[4] = new SrRCPair(nextR, prevC); //  (+1,-1)
+        myRCPArray[5] = new SrRCPair(nextR, col); //    (+1,0)
+        myRCPArray[6] = new SrRCPair(nextR, nextC); //  (+1,+1)
+        myRCPArray[7] = new SrRCPair(row, nextC); //    (0,+1)
+
+        return myRCPArray;
+    }
+    protected int getCell(int row, int col){
+        return arrayData[row][col];
+    }
+
+} // end SrIntArray()

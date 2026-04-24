@@ -1,29 +1,21 @@
 package pkgSrRenderEngine;
 
 import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
 import pkgDriver.SrSpot;
 import pkgSrUtils.SrWindowManager;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-
-public class SrLMRenderer {
+public class SrLMRenderer extends SrRenderer{
     public SrLMRenderer(SrVertexDataReader vdr, SrWindowManager wm, SrCamera cam, SrShaderObject so){
-        super();
+        super(wm, cam, so);
+        this.reader = vdr;
+        myVDMgr = new SrVertexDataManager(reader);
     }
 
     private SrVertexDataReader reader;
 
 
-    private void fillVertexCoordinates(){
+    @Override protected void fillVertexCoordinates(){
         myVDMgr.resetNextIIndex();
         myVDMgr.resetNextVCIndex();
         myVDMgr.resetVertexArray();

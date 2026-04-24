@@ -47,19 +47,7 @@ public class SrLMRenderer {
         }  //  for(int curVert = 0; curVert < NUMVERTS; curVert += VPST)
     }
 
-    protected void initOpenGL(){
-        int vao = glGenVertexArrays();
-        glBindVertexArray(vao);
 
-        glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
-        // This  changes the color of the window
-        glClearColor(0f, 0f, 1.0f, 1.0f);
-
-        shader.compileShader();
-        shader.setShader();
-
-
-    }
 
     private void setupVertexAttributes(){
         int stride = 9 * Float.BYTES ; // 9 floats per vertex

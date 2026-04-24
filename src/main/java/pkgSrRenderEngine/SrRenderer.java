@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public abstract class SrRenderer {
     protected SrWindowManager curWM;
@@ -80,6 +82,20 @@ public abstract class SrRenderer {
 
             curWM.swapBuffers();
         }
+    }
+
+    protected void initOpenGL(){
+        int vao = glGenVertexArrays();
+        glBindVertexArray(vao);
+
+        glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
+        // This  changes the color of the window
+        glClearColor(0f, 0f, 1.0f, 1.0f);
+
+        shader.compileShader();
+        shader.setShader();
+
+
     }
 
 

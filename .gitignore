@@ -9,5 +9,10 @@ gol_input.txt
 /bin
 *.run
 *.idea
+gradlew
+gradlew.bat
+ppa_test1.txt
+LandMondrianDataFinal.txt
+LandMondrianReducedSize.txt
 
 

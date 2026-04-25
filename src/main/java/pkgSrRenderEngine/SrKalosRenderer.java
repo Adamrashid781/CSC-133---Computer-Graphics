@@ -11,10 +11,7 @@ public class SrKalosRenderer extends SrRenderer{
     private Random rand = new Random();
 
 
-    // Grid Constants
-    private static final int GRID_COLS = 10;
-    private static final int GRID_ROWS = 10;
-    private static final float POLYGON_RADIUS = 60f;
+
 
 
     public SrKalosRenderer(SrWindowManager wm, SrCamera cam, SrShaderObject so){
@@ -22,8 +19,33 @@ public class SrKalosRenderer extends SrRenderer{
         // Max vertices: 100 polygons * (37 sides + 1 center) * 9 floats
         // Max indices: 100 polygons * 37 triangles * indices
 
-        myVDMgr = new SrVertexDataManager(100 * 38 * 9, 100 * 37 * 3);
+        myVDMgr = new SrVertexDataManager(SrPolygonArrayData.GRID_ROWS * SrPolygonArrayData.GRID_COLS * 38 * 9,
+                SrPolygonArrayData.GRID_ROWS * SrPolygonArrayData.GRID_COLS * 37 * 3);
     }
 
+    @Override protected void fillVertexCoordinates(){
+        myVDMgr.resetNextIIndex();
+        myVDMgr.resetNextVCIndex();
+        myVDMgr.resetVertexArray();
+        myVDMgr.resetIndexArray();
 
+        for (int row = 0; row < SrPolygonArrayData.GRID_ROWS; row++) {
+            for (int col = 0; col < SrPolygonArrayData.GRID_COLS; col++) {
+                // draw polygon at this grid position
+                // Calculate the center of each shape
+                float cellWidth = (float) SrWindowManager.getWinWidth() / SrPolygonArrayData.GRID_COLS;
+                float cellHeight = (float) SrWindowManager.getWinHeight() / SrPolygonArrayData.GRID_ROWS;
+                // Calculate the spacing of all polygons
+                float cx = col * cellWidth + cellWidth / 2;
+                float cy = row * cellHeight + cellHeight / 2;
+
+                // Generating random color for this polygon
+                float r = rand.nextFloat();
+                float g = rand.nextFloat();
+                float b = rand.nextFloat();
+
+
+            }
+        }
+    }
 }

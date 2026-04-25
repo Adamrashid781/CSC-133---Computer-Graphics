@@ -1,7 +1,10 @@
 package pkgSrRenderEngine;
 
+import org.joml.Vector4f;
 import pkgSrUtils.*;
 import java.util.Random;
+
+
 
 
 public class SrKalosRenderer extends SrRenderer{
@@ -30,6 +33,7 @@ public class SrKalosRenderer extends SrRenderer{
         myVDMgr.resetIndexArray();
 
         for (int row = 0; row < SrPolygonArrayData.GRID_ROWS; row++) {
+
             for (int col = 0; col < SrPolygonArrayData.GRID_COLS; col++) {
                 // draw polygon at this grid position
                 // Calculate the center of each shape
@@ -44,8 +48,25 @@ public class SrKalosRenderer extends SrRenderer{
                 float g = rand.nextFloat();
                 float b = rand.nextFloat();
 
+                // Draw polygon at (cx, cy)
+                myVDMgr.setDefaultColor(new Vector4f(r,g,b, 1.0f));
+                for(int i = 0; i < currentSides; i++){
+                    double angle0 = 2 * Math.PI * i / currentSides;
+                    double angle1 = 2 * Math.PI * (i + 1) / currentSides;
 
+                    float vx0 = cx + SrPolygonArrayData.POLYGON_RADIUS * (float)Math.cos(angle0);
+                    float vy0 = cy + SrPolygonArrayData.POLYGON_RADIUS * (float)Math.sin(angle0);
+                    float vx1 = cx + SrPolygonArrayData.POLYGON_RADIUS * (float)Math.cos(angle1);
+                    float vy1 = cy + SrPolygonArrayData.POLYGON_RADIUS * (float)Math.sin(angle1);
+
+                    myVDMgr.fillTriangleVertexCoordinates(cx, cy, 0, 0,
+                                                          vx0, vy0, 0, 0,
+                                                          vx1, vy1, 0, 0);
+
+                }
             }
         }
+
+
     }
 }

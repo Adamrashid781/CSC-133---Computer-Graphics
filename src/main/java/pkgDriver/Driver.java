@@ -15,7 +15,8 @@ public class Driver {
         SrWindowManager myWM = SrWindowManager.get(WIN_WIDTH, WIN_HEIGHT);
         SrShaderObject mySO = new SrShaderObject("vs_texture_color_1.glsl", "fs_texture_color_1.glsl" );
 
-        SrRenderer currentScene = new SrKalosRenderer(myWM, myCamera, mySO, TILE_WIDTH, TILE_HEIGHT, strArgs[0]);
+        final int TILE_WIDTH = 50, TILE_HEIGHT = 50;
+        SrRenderer currentScene = new SrCARenderer(myWM, myCamera, mySO, TILE_WIDTH, TILE_HEIGHT, args[0]);
 
         boolean retVal = currentScene.render();
         if (retVal) {

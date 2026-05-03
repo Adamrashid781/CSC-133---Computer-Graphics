@@ -16,8 +16,8 @@ public class SrWindowManager {
     private static GLFWKeyCallback keyCallback;
 
     private static long glfwWindow = NULL;
-    private static int  winWidth  = 1800;
-    private static int winHeight = 1800;
+    private static int  winWidth  = 3600;
+    private static int winHeight = 2400;
     private static boolean resized = false;
 
 

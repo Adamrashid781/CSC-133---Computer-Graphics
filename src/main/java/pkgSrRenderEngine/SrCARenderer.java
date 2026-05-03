@@ -37,7 +37,39 @@ public class SrCARenderer extends SrRenderer {
     @Override
     protected void fillVertexCoordinates() {
         // next step
+        myVDMgr.resetNextIIndex();
+        myVDMgr.resetNextVCIndex();
+        myVDMgr.resetVertexArray();
+        myVDMgr.resetIndexArray();
 
+        for(int row = 0; row < numRows; row++){
+            for(int col = 0; col < numCols; col++){
+                float xmin, ymin;
+                xmin = TILE_OFFSET_X + (PADDING_X + tileWidth) * col;
+                ymin = (SrWindowManager.getWinHeight() - TILE_OFFSET_Y - tileHeight) - (PADDING_Y + tileHeight) * row;
+
+                // change color of block if cell is alive
+                if(myGol.isCellAlive(row, col)){
+                    float r = rand.nextFloat();
+                    float g = rand.nextFloat();
+                    float b = rand.nextFloat();
+                    myVDMgr.setDefaultColor(new Vector4f(r, g, b, 1.0f));
+
+                    // triangle 1
+                    myVDMgr.fillTriangleVertexCoordinates(
+                            xmin, ymin, 0,0,
+                            xmin + tileWidth, ymin, 0, 0,
+                            xmin + tileWidth, ymin + tileHeight, 0, 0);
+
+                    // triangle 2
+                    myVDMgr.fillTriangleVertexCoordinates(
+                            xmin, ymin, 0,0,
+                            xmin + tileWidth, ymin+ tileHeight, 0, 0,
+                            xmin , ymin + tileHeight, 0, 0);
+                    aliveCount++;
+                }
+            }
+        }
     }
 
     @Override

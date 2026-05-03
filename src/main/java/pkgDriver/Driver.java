@@ -15,7 +15,7 @@ public class Driver {
         SrWindowManager myWM = SrWindowManager.get(WIN_WIDTH, WIN_HEIGHT);
         SrShaderObject mySO = new SrShaderObject("vs_texture_color_1.glsl", "fs_texture_color_1.glsl" );
 
-        final int TILE_WIDTH = 50, TILE_HEIGHT = 50;
+        final int TILE_WIDTH = 100, TILE_HEIGHT = 100;
         SrRenderer currentScene = new SrCARenderer(myWM, myCamera, mySO, TILE_WIDTH, TILE_HEIGHT, args[0]);
 
         boolean retVal = currentScene.render();

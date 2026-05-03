@@ -92,7 +92,7 @@ public abstract class SrRenderer {
 
         glViewport(0, 0, SrWindowManager.getWinWidth(), SrWindowManager.getWinHeight());
         // This  changes the color of the window
-        glClearColor(0f, 0f, 1.0f, 1.0f);
+        glClearColor(0f, 0f, 0f, 1.0f);
 
         shader.compileShader();
         shader.setShader();

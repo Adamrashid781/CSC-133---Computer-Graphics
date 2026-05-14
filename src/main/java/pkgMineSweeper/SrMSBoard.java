@@ -17,6 +17,24 @@ public class SrMSBoard {
         this.cols = cols;
     }
 
+    private void initBoard(int rows, int cols){
+        for(int row = 0; row < rows; row++){
+            for(int col = 0; col < cols; col++){
+                board[row][col] = 1;
+                revealed[row][col] = true;
+            }
+        }
+        int count = 0;
+        Random rand = new Random();
+        while( count < 14){
+            int row = rand.nextInt(rows);
+            int col = rand.nextInt(cols);
+            if(board[row][col] == 1){
+                board[row][col] = -1;
+                count++;
+            }
+        }
+    }
 
 
 

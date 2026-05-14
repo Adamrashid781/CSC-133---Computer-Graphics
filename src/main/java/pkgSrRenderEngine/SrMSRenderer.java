@@ -11,12 +11,17 @@ public class SrMSRenderer extends SrRenderer{
     private SrTextureObject diamondTex;
     private SrTextureObject mineTex;
     private SrTextureObject unrevealedTex;
+    private String imgPath = System.getProperty("user.dir") + "/assets/images/";
 
     public SrMSRenderer(SrWindowManager wm, SrCamera cam, SrShaderObject so, SrMSBoard board){
         super(wm, cam, so);
         this.board = board;
         myVDMgr = new SrVertexDataManager(BOARD_ROWS * BOARD_COLS * 6 * 9, BOARD_ROWS * BOARD_COLS * 6);
 
+        // Texture addresses
+        mineTex = new SrTextureObject(imgPath + "MineBomb_2.PNG");
+        unrevealedTex = new SrTextureObject(imgPath + "MysteryBox_2.PNG");
+        diamondTex = new SrTextureObject(imgPath + "ShiningDiamond_2.PNG");
 
     }
 

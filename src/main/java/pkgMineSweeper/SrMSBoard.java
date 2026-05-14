@@ -69,6 +69,10 @@ public class SrMSBoard extends SrIntArray {
         return arrayData[row][col] == -1;
     }
 
+    public boolean isRevealed(int row, int col){
+        return revealed[row][col];
+    }
+
 
 
 

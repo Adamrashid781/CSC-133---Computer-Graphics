@@ -61,7 +61,10 @@ public class SrMSBoard extends SrIntArray {
         return (mineCount * 10) + (diamondCount * 5);
     }
 
-
+    public void reveal(int row, int col){
+        revealed[row][col] = true;
+        totalScore += calculateScore(row, col);
+    }
 
 
 

@@ -77,6 +77,9 @@ public class SrMSBoard extends SrIntArray {
         return arrayData[row][col];
     }
 
+    public int getScore(){
+        return totalScore;
+    }
 
 
 

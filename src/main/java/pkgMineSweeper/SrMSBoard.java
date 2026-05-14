@@ -73,6 +73,10 @@ public class SrMSBoard extends SrIntArray {
         return revealed[row][col];
     }
 
+    public int getTile(int row, int col){
+        return arrayData[row][col];
+    }
+
 
 
 

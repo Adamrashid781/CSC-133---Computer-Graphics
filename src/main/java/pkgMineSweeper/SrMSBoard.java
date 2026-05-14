@@ -1,16 +1,20 @@
 package pkgMineSweeper;
 
+import pkgSrUtils.SrIntArray;
+import pkgSrUtils.SrRCPair;
+
 import java.util.Random;
 
-public class SrMSBoard {
+import static java.lang.Math.abs;
 
-    private int[][] board;           // 9x7 grid, -1 = mines, 1 = diamonds
+public class SrMSBoard extends SrIntArray {
+
     private boolean[][] revealed;    // tracks which tiles have been clicked
     private int totalScore;          // keeps track of running score
     private int rows, cols;
 
     public SrMSBoard(int rows, int cols){
-        board = new int[rows][cols];
+        super(rows, cols);
         revealed = new boolean[rows][cols];
         initBoard(rows, cols);
         this.rows = rows;
@@ -20,8 +24,8 @@ public class SrMSBoard {
     private void initBoard(int rows, int cols){
         for(int row = 0; row < rows; row++){
             for(int col = 0; col < cols; col++){
-                board[row][col] = 1;
-                revealed[row][col] = true;
+                arrayData[row][col] = 1;
+                revealed[row][col] = false;
             }
         }
         int count = 0;
@@ -29,8 +33,8 @@ public class SrMSBoard {
         while( count < 14){
             int row = rand.nextInt(rows);
             int col = rand.nextInt(cols);
-            if(board[row][col] == 1){
-                board[row][col] = -1;
+            if(arrayData[row][col] == 1){
+                arrayData[row][col] = -1;
                 count++;
             }
         }
@@ -39,11 +43,25 @@ public class SrMSBoard {
     public void printBoard(){
         for(int row = 0; row < rows; row++){
             for(int col = 0; col < cols; col++){
-                System.out.print(board[row][col] == -1 ? " M " : " D ");
+                System.out.print(arrayData[row][col] == -1 ? " M " : " D ");
             }
             System.out.print("\n");
         }
     }
+
+    public int calculateScore(int row, int col){
+        SrRCPair[] neighbors = getNextNearestNeighborsArray(row, col);
+        int mineCount = 0, diamondCount = 0;
+        for (SrRCPair neighbor : neighbors){
+            if (Math.abs(neighbor.myRow() - row) <= 1 && Math.abs(neighbor.myCol() - col) <= 1) {
+                if (arrayData[neighbor.myRow()][neighbor.myCol()] == -1) mineCount++;
+                else diamondCount++;
+            }
+        }
+        return (mineCount * 10) + (diamondCount * 5);
+    }
+
+
 
 
 

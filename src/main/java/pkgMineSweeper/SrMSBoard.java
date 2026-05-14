@@ -36,6 +36,15 @@ public class SrMSBoard {
         }
     }
 
+    public void printBoard(){
+        for(int row = 0; row < rows; row++){
+            for(int col = 0; col < cols; col++){
+                System.out.print(board[row][col] == -1 ? " M " : " D ");
+            }
+            System.out.print("\n");
+        }
+    }
+
 
 
 

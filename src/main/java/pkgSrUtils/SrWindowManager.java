@@ -85,6 +85,8 @@ public class SrWindowManager {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
         glfwWindow = glfwCreateWindow(winWidth, winHeight, "CSC138", NULL, NULL);
+        glfwSetCursorPosCallback(glfwWindow, SrMouseListener::mousePosCallBack);
+        glfwSetMouseButtonCallback(glfwWindow, SrMouseListener::mouseButtonCallback);
         if(glfwWindow == NULL){
             throw new RuntimeException("Failed to create the GLFW window");
         }

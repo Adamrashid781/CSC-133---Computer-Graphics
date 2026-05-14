@@ -1,6 +1,7 @@
 package pkgDriver;
 
 import org.joml.Vector3f;
+import pkgMineSweeper.SrMSBoard;
 import pkgSrRenderEngine.*;
 import pkgSrUtils.*;
 import static pkgDriver.SrSpot.*;
@@ -15,8 +16,9 @@ public class Driver {
         SrWindowManager myWM = SrWindowManager.get(WIN_WIDTH, WIN_HEIGHT);
         SrShaderObject mySO = new SrShaderObject("vs_texture_color_1.glsl", "fs_texture_color_1.glsl" );
 
-        final int TILE_WIDTH = 100, TILE_HEIGHT = 100;
-        SrRenderer currentScene = new SrCARenderer(myWM, myCamera, mySO, TILE_WIDTH, TILE_HEIGHT, args[0]);
+        SrMSBoard myBoard = new SrMSBoard(BOARD_ROWS, BOARD_COLS);
+        myBoard.printBoard();
+        SrRenderer currentScene = new SrMSRenderer(myWM, myCamera, mySO, myBoard);
 
         boolean retVal = currentScene.render();
         if (retVal) {

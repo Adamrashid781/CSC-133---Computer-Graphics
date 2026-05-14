@@ -65,6 +65,10 @@ public class SrMSBoard extends SrIntArray {
         revealed[row][col] = true;
         totalScore += calculateScore(row, col);
     }
+    public boolean isMine(int row, int col){
+        return arrayData[row][col] == -1;
+    }
+
 
 
 

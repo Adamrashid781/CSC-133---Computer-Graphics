@@ -65,7 +65,7 @@ class SrTextureObject {
             assert false : "Error loading the texture image \"" + texFilepath + "\" ";
         }
         // Now that the texture is loaded, the image memory can be released to OS:
-        stbi_image_free(texImage);
+        if(texImage != null) stbi_image_free(texImage);
     }  //  public void loadImageToTexture(...)
 
 }

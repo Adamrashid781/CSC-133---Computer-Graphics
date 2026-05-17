@@ -10,6 +10,7 @@ import static java.lang.Math.abs;
 public class SrMSBoard extends SrIntArray {
 
     private boolean[][] revealed;    // tracks which tiles have been clicked
+    private boolean gameOver = false;
     private int totalScore;          // keeps track of running score
     private int rows, cols;
 
@@ -60,6 +61,7 @@ public class SrMSBoard extends SrIntArray {
         }
         return (mineCount * 10) + (diamondCount * 5);
     }
+    public boolean isGameOver() { return gameOver; }
 
     public void reveal(int row, int col){
         revealed[row][col] = true;

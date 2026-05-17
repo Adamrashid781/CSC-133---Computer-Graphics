@@ -26,37 +26,47 @@ public class SrMSRenderer extends SrRenderer{
     }
 
     @Override
-    protected void fillVertexCoordinates() {
+    protected void fillVertexCoordinates(){
+
+    }
+    protected int fillVertexCoordinates(int tileType) {
         myVDMgr.resetNextIIndex();
         myVDMgr.resetNextVCIndex();
         myVDMgr.resetVertexArray();
         myVDMgr.resetIndexArray();
+
+        int count = 0 ;
+
         for(int row = 0; row < BOARD_ROWS; row++){
             for(int col = 0; col < BOARD_COLS; col++){
-                int xmin = TILE_OFFSET_X + (TILE_SIZE + PADDING_X) * col;
-                int ymin = (WIN_HEIGHT - TILE_OFFSET_Y - TILE_SIZE) - (TILE_SIZE + PADDING_Y) * row;
+                boolean shouldDraw = false;
 
-                if(!board.isRevealed(row, col)){ // grey = unrevealed
-                    myVDMgr.setDefaultColor(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f));
-                }
-                else if (board.isMine(row, col)){ // red = mine
-                    myVDMgr.setDefaultColor(new Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
-                }
-                else{ // blue = diamond
-                    myVDMgr.setDefaultColor(new Vector4f(0.0f, 0.5f, 1.0f, 1.0f));
-                }
-                // triangle 1
-                myVDMgr.fillTriangleVertexCoordinates(xmin, ymin, 0, 0,
-                        xmin + TILE_SIZE, ymin, 1, 0,
-                        xmin + TILE_SIZE, ymin + TILE_SIZE, 1, 1);
+                if(tileType == 0 && !board.isRevealed(row, col)) shouldDraw = true;
+                else if (tileType != 0 && board.isRevealed(row, col) && board.getTile(row, col) == tileType) shouldDraw = true;
 
-                // Triangle 2
-                myVDMgr.fillTriangleVertexCoordinates(xmin, ymin, 0, 0,
-                        xmin + TILE_SIZE, ymin + TILE_SIZE, 1, 1,
-                        xmin, ymin + TILE_SIZE, 0, 1);
+
+
+                if(shouldDraw) {
+                    int xmin = TILE_OFFSET_X + (TILE_SIZE + PADDING_X) * col;
+                    int ymin = (WIN_HEIGHT - TILE_OFFSET_Y - TILE_SIZE) - (TILE_SIZE + PADDING_Y) * row;
+
+                    myVDMgr.setDefaultColor(new Vector4f(1, 1, 1, 1));
+
+                    // triangle 1
+                    myVDMgr.fillTriangleVertexCoordinates(xmin, ymin, 0, 0,
+                            xmin + TILE_SIZE, ymin, 1, 0,
+                            xmin + TILE_SIZE, ymin + TILE_SIZE, 1, 1);
+
+                    // Triangle 2
+                    myVDMgr.fillTriangleVertexCoordinates(xmin, ymin, 0, 0,
+                            xmin + TILE_SIZE, ymin + TILE_SIZE, 1, 1,
+                            xmin, ymin + TILE_SIZE, 0, 1);
+                    count++;
+                }
 
             }
         }
+        return count;
 
     }
     @Override

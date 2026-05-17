@@ -63,9 +63,22 @@ public class SrMSBoard extends SrIntArray {
     }
     public boolean isGameOver() { return gameOver; }
 
+
     public void reveal(int row, int col){
         revealed[row][col] = true;
         totalScore += calculateScore(row, col);
+        if(isMine(row, col)){
+            gameOver = true;
+            for(int r = 0; r < rows; r++){
+                for(int c = 0; c < cols; c++){
+                    revealed[r][c] = true;
+                }
+            }
+        }
+        else{
+            revealed[row][col] = true;
+            totalScore += calculateScore(row, col);
+        }
     }
     public boolean isMine(int row, int col){
         return arrayData[row][col] == -1;

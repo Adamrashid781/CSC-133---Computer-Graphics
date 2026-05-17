@@ -20,7 +20,7 @@ public class SrMouseListener {
         }
     }
 
-    public double getX() {return mouseX;}
-    public double getY(){return mouseY;}
-    public boolean isPressed(){return mouseButtonPressed;}
+    public static double getX() {return mouseX;}
+    public static double getY(){return mouseY;}
+    public static boolean isPressed(){return mouseButtonPressed;}
 }
